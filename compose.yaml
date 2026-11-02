@@ -1,0 +1,14 @@
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /var/www/html
+    container_name: servidor-php
+    ports:
+      - "8080:80"
+    volumes:
+      - ./public:/var/www/html/public
+    env_file:
+      - .env
+    command: php -S 0.0.0.0:80 -t /var/www/html/public
