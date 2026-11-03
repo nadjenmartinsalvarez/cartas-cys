@@ -9,12 +9,16 @@ $collection = $client->selectCollection(
   "scores"
 );
 
-$top5 = $collection.find(
+$top5 = $collection->find(
   [
-    "puntos" => ["$gt" => 0]
+    "puntos" => ['$gt' => 0]
   ],
   [
-    "sort" => ["puntos" => -1],
+    "sort" => [
+      "puntos" => -1,
+      "tiempoRestante" => -1,
+      "fechaCreacion" => 1
+    ],
     "limit" => 5
   ]
 );
@@ -22,5 +26,11 @@ $top5 = $collection.find(
 $scores = [];
 
 foreach ($top5 as $contender) {
-
+  $scores[] = [
+    "nombre" => (string) $contender["nombre"],
+    "puntos" => (int) $contender["puntos"],
+    "tiempoRestante" => (int) $contender["tiempoRestante"]
+  ];
 }
+
+echo json_encode(["scores" => $scores]);

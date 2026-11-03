@@ -6,11 +6,74 @@
   <meta name='viewport' content='width=device-width, initial-scale=1'>
   <title>Parejas Pokemon</title>
   <link rel='stylesheet' href='./css/styles.css'>
-  <script src="./js/script.js"></script>
+  <script src="./js/script.js" type="module"></script>
 </head>
 
 <body>
-  <p>Hola</p>
+  <main>
+    <section id="menu-screen" class="screen-section">
+      <div class="intro">
+        <p>Parejas Pokemon</p>
+        <button id="start-button">Jugar ahora</button>
+      </div>
+      <section id="leaderboard-section">
+        <div>
+          <p>Top 5</p>
+          <p></p>
+        </div>
+        <p id="leaderboard-status"></p>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Nombre</th>
+              <th>Puntos</th>
+              <th>Tiempo</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-body"></tbody>
+        </table>
+      </section>
+    </section>
+
+    <section id="name-screen" class="screen-section">
+      <button class="back-button">Volver al menú</button>
+      <div class="form-card">
+        <form id="name-form">
+          <label for="name-input">Tu nombre</label>
+          <input id="name-input" name="name" maxlength="20" minlength="1" required />
+          <button class="button button-primary full-width" type="submit">Empezar partida</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="game-screen" class="screen-section">
+      <p id="game-message">Encuentra las dos cartas con el mismo Pokémon.</p>
+      <div id="board"></div>
+      <div class="stat-bar">
+        <button class="text-button" id="quit-button">Salir</button>
+        <p>USER: <strong id="game-name-value"></strong></p>
+        <p>TIEMPO: <strong id="timer-value">60 s</strong></p>
+        <p>SCORE: <strong id="score-value">0</strong></p>
+      </div>
+    </section>
+
+    <section id="result-screen" class="screen-section">
+      <p id="result-title">PARTIDA TERMINADA</p>
+      <p id="result-description"></p>
+      <div class="result-stats">
+        <p>USER: <strong id="result-name-value"></strong></p>
+        <p>TIEMPO: <strong id="final-time">60 s</strong></p>
+        <p>SCORE: <strong id="final-score">0</strong></p>
+        <p>PAREJAS: <strong id="final-matches">0/15</strong></p>
+      </div>
+      <p id="save-status">Guardando resultado…</p>
+      <div class="result-actions">
+        <button id="play-again-button">Jugar otra vez</button>
+        <button class="back-button">Volver al menú</button>
+      </div>
+    </section>
+  </main>
 </body>
 
 </html>
