@@ -125,11 +125,11 @@ class Board {
   //Crear un mazo de cartas
   createDeck() {
     const pokemonIds = [];
-    pairCount = this.cardCount / 2;
+    const pairCount = this.cardCount / 2;
 
     while (pokemonIds.length < pairCount) {
       const id = Math.floor(Math.random() * this.pokemonCount) + 1;
-      if (!pokemonIds(includes(id))) {
+      if (!pokemonIds.includes(id)) {
         pokemonIds.push(id);
       };
     };
@@ -163,13 +163,12 @@ class Board {
 
   //Manejar el click de una carta
   async handleCardClick(card) {
-    if (this.selectedCards.length === 2 || card.turned || this.createDeck.matched) {
+    if (this.selectedCards.length === 2 || card.turned || card.matched || this.game.finished) {
       return;
     };
 
     card.turn();
     this.selectedCards.push(card);
-    this.game.score++;
     this.renderCard(card);
 
     if (this.selectedCards.length < 2) {
@@ -182,7 +181,7 @@ class Board {
     if (firstCard.sharedId === secondCard.sharedId) {
       firstCard.match();
       secondCard.match();
-      this.game.score++;
+      this.game.score += 2;
       this.game.updateStats();
 
       this.renderCard(firstCard);
@@ -217,8 +216,8 @@ class Board {
     this.renderCard(firstCard);
     this.renderCard(secondCard);
 
-    this.game.score--
-    this.game.upadteStats();
+    this.game.score = Math.max(this.game.score - 1, 0);
+    this.game.updateStats();
 
     this.clearSelection();
   };
@@ -226,6 +225,7 @@ class Board {
   //Crear el tablero del juego
   async loadBoard() {
     this.clearBoard();
+    this.createDeck();
 
     for (const card of this.cards) {
       const button = create("button");
@@ -238,7 +238,7 @@ class Board {
         this.handleCardClick(card);
       });
 
-      this.renderCard();
+      this.renderCard(card);
       this.container.appendChild(button);
     };
 
@@ -301,18 +301,105 @@ class Game {
     showScreen("game-screen");
     this.updateStats();
 
-    const boardReady = await board.loadBoard();
+    const boardReady = await this.board.loadBoard();
 
     this.startTimer();
   };
 
+  //Enviar los datos a MongoDB
+  async sendFinalData(name, score, time) {
+    const response = await fetch("./api/send.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nombre: name,
+        puntos: score,
+        tiempoRestante: time
+      })
+    });
+
+    return response.json();
+  }
+
   //Finalizar el juego
-  finish(reason) {
+  finishGame(reason) {
     this.finished = true;
 
     this.stopTimer();
     this.board.clearSelection();
 
-    this.finalTime = 
-  }
+    const bonus = reason === "completed" && this.remainingSeconds > 0 ? 40 : 0;
+
+    const finalScore = this.score + bonus;
+
+    const message = (() => {
+      if (reason === "completed") {
+        return "Bien hecho, completaste el tablero por 40 puntos extra";
+      } else if (reason === "timeout") {
+        return "Se te acabó el tiempo";
+      };
+    })();
+
+    select("#result-description").textContent = message;
+
+    select("#result-name-value").textContent = this.currentName;
+    select("#final-score").textContent = String(finalScore);
+    select("#final-time").textContent = this.remainingSeconds + "s";
+
+    this.sendFinalData(this.currentName, finalScore, this.remainingSeconds);
+
+    showScreen("result-screen");
+  };
+
+  //Salir del juego
+  quit() {
+    this.stopTimer();
+    this.board.clearBoard();
+
+    this.finished = true;
+
+    showScreen("menu-screen");
+  };
 };
+
+function initializeApp(pokemonCount) {
+  showScreen("menu-screen");
+  const boardContainer = select("#board");
+  const game = new Game(boardContainer, pokemonCount);
+
+  select("#start-button").addEventListener("click", function () {
+    select("#name-input").value = "";
+
+    showScreen("name-screen");
+  });
+
+  select("#name-form").addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const name = select("#name-input").value.trim();
+
+    game.startGame(name);
+  });
+
+  const backButtons = selectAll(".back-button");
+
+  backButtons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      game.quit();
+      loadLeaderboard();
+    });
+  });
+
+  select("#quit-button").addEventListener("click", function () {
+    game.quit();
+  });
+
+  select("#play-again-button").addEventListener("click", function () {
+    game.startGame(game.currentName);
+  });
+
+  loadLeaderboard();
+};
+
+const pokemonCount = await getPokemonCount();
+initializeApp(pokemonCount);

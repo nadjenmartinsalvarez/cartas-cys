@@ -1,3 +1,186 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+:root {
+  --transparent-color: rgba(255, 255, 255, 0.85);
+  --red-border: #CA1B00;
+}
+
+body {
+  min-height: 100vh;
+  background: url("../images/pokecenter.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+main {
+  min-height: 100vh;
+}
+
+.screen-section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
 .hidden {
-  display: none;
+  display: none !important;
+}
+
+h1 {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+button,
+input,
+table,
+th,
+td {
+  font-family: inherit;
+}
+
+#start-button,
+.back-button,
+#play-again-button,
+#quit-button,
+.button {
+  border: 0.2rem solid var(--red-border);
+  background: var(--transparent-color);
+  padding: 0.7rem 1.2rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+}
+
+#menu-screen,
+#game-screen,
+#result-screen,
+#name-screen {
+  gap: 1rem;
+}
+
+.intro,
+#leaderboard-section,
+.form-card,
+#game-message,
+.result-stats,
+.stat-bar,
+#result-title,
+#result-description {
+  background: var(--transparent-color);
+  border: 0.2rem solid var(--red-border);
+  border-radius: 0.5rem;
+}
+
+.intro,
+#leaderboard-section,
+.form-card {
+  padding: 1rem;
+}
+
+#leaderboard-section,
+.form-card {
+  width: min(90vw, 500px);
+}
+
+#leaderboard-status {
+  min-height: 1.2rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 0.5rem;
+  text-align: center;
+  border-bottom: 1px solid var(--red-border);
+}
+
+#name-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+input {
+  padding: 0.7rem;
+  border: 1px solid var(--red-border);
+  border-radius: 0.4rem;
+}
+
+#board {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(50px, 1fr));
+  gap: 0.4rem;
+  width: min(90vw, 700px);
+  padding: 0.5rem;
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+}
+
+.card {
+  aspect-ratio: 1 / 1.2;
+  border: 1px solid #aaa;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+}
+
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.stat-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  padding: 0.8rem 1rem;
+  width: min(90vw, 700px);
+}
+
+.result-stats,
+.result-actions,
+#result-title,
+#result-description {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+}
+
+.text-button {
+  border: 1px solid #111;
+  background: white;
+  padding: 0.5rem 0.8rem;
+  border-radius: 0.4rem;
+}
+
+@media (max-width: 600px) {
+  #board {
+    grid-template-columns: repeat(5, 1fr);
+  }
 }
